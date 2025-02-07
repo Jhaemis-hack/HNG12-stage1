@@ -9,11 +9,12 @@ const port = 4000
 app.use(cors()) 
 
 app.use(async (req, res, next) => {
-    const number = parseInt(req.query.number)
+    const number = Number(req.query.number)
 
     if(isNaN(number) == true){
         return res.status(400).json({
-            "number": "alphabet",
+            "number": `${req.query.number}`,
+
             "error": true
         })
     }

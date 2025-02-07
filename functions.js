@@ -83,11 +83,12 @@ const number_Api=async (number)=>{
 
 const Num =async (req, res) =>{
     try {
-        const number = parseInt(req.query.number)
+        const number = Number(req.query.number)
+        console.log(number)
 
         if(isNaN(number) == true){
             return res.status(400).json({
-                "number": "alphabet",
+                "number": `${req.query.number}`,
                 "error": true
             })
         }
