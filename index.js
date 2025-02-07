@@ -11,10 +11,11 @@ app.use(cors())
 app.use(async (req, res, next) => {
     const number = Number(req.query.number)
 
-    if(isNaN(number) == true){
+    if(isNaN(number) == true ||
+        Number.isInteger(number) == false||
+        Math.sign(number) == -1){
         return res.status(400).json({
             "number": `${req.query.number}`,
-
             "error": true
         })
     }
