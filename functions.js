@@ -1,28 +1,30 @@
 const axios = require('axios');
 const redis = require('redis')
 
-const isPrime = (number) =>{
-    let is_prime = false
-    let divisor= []
-    let prime = 0
-    let strNum = number.toString()    
+const isPrime = (number) => {
+    if (number < 2){
+        return { is_prime: false, divisor: [] };
+    } 
+
+    if (number === 2){
+        return { is_prime: true, divisor: [1] };
+    } 
+    if (number % 2 === 0){
+        return { is_prime: false, divisor: [1, 2] };
+    } 
     
-    for(let i = 0; i < number; i++){
-        
-        if(number % i === 0 && i != 1){ 
-            prime++
-        }
-
-        if(number%i === 0 && i !== number){
-            divisor.push(i);
+    let divisor = [1];
+    let is_prime = true;
+    
+    for (let i = 2; i <= Math.sqrt(number); i++) {
+        if (number % i === 0) {
+            divisor.push(i, number / i);
+            is_prime = false;
         }
     }
-
-    if(prime == 0){
-        is_prime = true
-    }
-    return result = {is_prime, divisor}
-}
+    
+    return { is_prime, divisor: [...new Set(divisor)] };
+};
 
 const isPerfect = (number, divisor) =>{
     let sumDivisor = 0;
@@ -94,17 +96,11 @@ const Num =async (req, res) =>{
             })
         }
 
-        const result_isPrime = isPrime(number)
-        const is_prime = result_isPrime.is_prime
-        const divisor = result_isPrime.divisor;
-        
-        const result_isPerfect = isPerfect(number, divisor)
-        const is_perfect = result_isPerfect.is_perfect;
-    
-        const result_armstrong = armstrongDigitSum(number)
-        const digit_sum = result_armstrong.digit_sum;
-        const properties = result_armstrong.properties
-        let fun_fact
+        const { is_prime, divisor } = isPrime(number);
+        const { is_perfect } = isPerfect(number, divisor);
+        const { digit_sum, properties } = armstrongDigitSum(number);
+        const fun_fact = await number_Api(number);
+
         try {
             fun_fact = await number_Api(number) 
         } catch (error) {
