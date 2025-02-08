@@ -107,34 +107,6 @@ const Num =async (req, res) =>{
             console.log(error.message)
         }
 
-        try {
-            const client = redis.createClient({
-                username: process.env.username,
-                password: process.env.password,
-                socket: {
-                    host: process.env.host,
-                    port: process.env.port
-                }
-            });
-
-            client.on('error', err => console.log('Redis Client Error', err));
-    
-            await client.connect();
-
-            await client.hSet(`${number}`, {
-                number: `${number}`,
-                is_prime: `${is_prime}`,
-                is_perfect: `${is_perfect}`,
-                properties: `[${properties}]`,
-                digit_sum: `${digit_sum}`,
-                fun_fact: `${fun_fact}`
-            })
-            
-        } catch (error) {
-            console.error(error);
-            return res.status(500).json({ error: error.message });
-        }
-
         return res.status(200).json({
             number,
             is_prime,
